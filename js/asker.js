@@ -4,6 +4,7 @@ var state = 1
 var turn = []
 var a_timer = new Audio('sounds/timer.mp3');
 var a_stop = new Audio('sounds/stop.mp3');
+const optionList = ["a","b","c","d"];
 
 a_timer.loop = true;
 a_timer.volume = 0.05;
@@ -12,6 +13,7 @@ a_stop.volume = 0.05;
 function recive(sms_org) {
     if(sms_org.includes("PRIVMSG")){
         sms = parse_sms(sms_org)
+        //sms = parseMessage(sms_org)
         
         
         // if (points[sms.user] == null){
@@ -22,18 +24,15 @@ function recive(sms_org) {
         // paint_score()
         
         console.log(sms_org)
-        if (sms.user == "is_frog" || sms.user == "FJTRnipon"){
+        if (sms.mod > 0 || sms.user == "CienciateConBigman"){
             commands(sms)
         }
 
-        if (
-                sms.text.toLowerCase() == "a" ||
-                sms.text.toLowerCase() == "b" ||
-                sms.text.toLowerCase() == "c" ||
-                sms.text.toLowerCase() == "d"
-            )
+        if (optionList.some(option => option == sms.text.toLowerCase()))
         {
             if(runing){
+                //Delete sms ASAP we receive it, to hide the response from other user.
+                delete_sms(sms.id)
                 if(!turn.includes(sms.user)){
                     let val = 0
                     if(questions[state].correct.toLowerCase() == sms.text.toLowerCase()){
@@ -46,15 +45,14 @@ function recive(sms_org) {
                         points[sms.user] += val
                     }
 
-                    send("@" + sms.user + " tu voto ha sido anotado.")
+                    send(replyToUser(sms.user,"tu voto ha sido anotado."))
                     turn.push(sms.user)
                 }else{
-                    send("@" + sms.user + " ya has votado esta ronda.")
+                    send(replyToUser(sms.user, "ya has votado esta ronda."))
                 }
             }else{
-                send("@" + sms.user + " espera a que comience la siguiente ronda.")
+                send(replyToUser(sms.user, "espera a que comience la siguiente ronda."))
             }
-            delete_sms(sms.id)
         }
     }else{
         console.log("User list recived");
@@ -66,7 +64,8 @@ function parse_sms(sms) {
         id: sms.match(/;id=([a-f,0-9]{0,}-[a-f,0-9]{0,}-[a-f,0-9]{0,}-[a-f,0-9]{0,}-[a-f,0-9]{0,});/)[1],
         user: sms.match(/display-name=([a-z,A-Z,_,-]{0,})/)[1],
         color: sms.match(/color=(.{7})/)[1],
-        text: sms.split("PRIVMSG " + channel + " :")[1].replace('\r\n', '')
+        text: sms.split("PRIVMSG " + channel + " :")[1].replace('\r\n', ''),
+        mod: sms.match(/mod=(.{1})/)[1]
     }
 }
 
@@ -167,7 +166,8 @@ function commands(sms){
                 a_timer.pause();
                 a_stop.play();
             }else{
-                send("@" + sms.user + " no hay ninguna ronda activa en este momento.")
+                
+                send(replyToUser(sms.user,"no hay ninguna ronda activa en este momento."))
             }
             break;
 
@@ -176,7 +176,7 @@ function commands(sms){
                 next()
                 a_timer.play();
             }else{
-                send("@" + sms.user + " la ronda ya ha comenzado.")
+                send(replyToUser(sms.user, "la ronda ya ha comenzado."))
             }
             break;
     
@@ -187,4 +187,8 @@ function commands(sms){
         default:
             break;
     }
+}
+
+function replyToUser(user, msg) {
+    return "@" + user + " " + msg;
 }
