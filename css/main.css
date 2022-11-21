@@ -1,0 +1,93 @@
+#main {
+    height: 100%;
+    background-color: transparent;
+    /* font-family: "Karmatic Arcade"; */
+    font-family: "Burbank Big Condensed";
+    font-weight: bold;
+    overflow: hidden;
+}
+
+.comic{
+    font-family: "comic sand";
+}
+
+#score {
+    position: relative;
+    bottom: 0%;
+    left: 0%;
+    height: 35%;
+    border-radius: 0px 12px 0px 0px;
+    transition: all 1s ease-in-out;
+}
+
+.response_container{
+    transition: all 1s ease-in-out;
+}
+
+#score.hide {
+    bottom: -25%;
+    left: -130%;
+}
+
+#score .h5{
+    height: 61px;
+    font-size: 40px;
+    border-bottom: 1px solid green;
+}
+
+#score #score_text{
+    height: calc(100% - 61px);
+    overflow: hidden;
+}
+
+
+#score .score{
+    height: 30px;
+    font-size: 20px;
+    overflow: hidden;
+}
+
+#menu {
+    height: 35%;
+    text-align: right;    
+    font-size: 25px;
+}
+
+.up {
+    height: 65%;
+}
+
+#ask_text{
+    font-size: 40px;
+    border-bottom: 1px solid green;
+}
+
+.response_container{
+    font-size: 30px;
+}
+
+#block {
+    position: relative;
+    bottom: 0%;
+    right: 0%;
+    height: 35%;
+    font-size: 20px;
+    border-radius: 12px 0px 0px 0px;
+    transition: all 1s ease-in-out;
+}
+
+#block.hide {
+    bottom: -25%;
+    right: -130%;
+}
+
+#runing, #stoping, #finish {
+    display: none;
+}
+
+.movil{
+    background: #e8f5e4;
+    -webkit-box-shadow: 0px 0px 5px 10px rgba(232,245,228,1);
+    -moz-box-shadow: 0px 0px 5px 10px rgba(232,245,228,1);
+    box-shadow: 0px 0px 5px 10px rgba(232,245,228,1);
+}
