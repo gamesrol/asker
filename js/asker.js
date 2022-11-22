@@ -12,61 +12,42 @@ a_stop.volume = 0.05;
 
 function recive(sms_org) {
     if(sms_org.includes("PRIVMSG")){
-        sms = parse_sms(sms_org)
-        //sms = parseMessage(sms_org)
+        sms = parseMessage(sms_org);
         
-        
-        // if (points[sms.user] == null){
-        //     points[sms.user] = 1
-        // }else{
-        //     points[sms.user]++
-        // }
-        // paint_score()
-        
-        console.log(sms_org)
-        if (sms.mod > 0 || sms.user == "CienciateConBigman"){
+        console.log(sms);
+
+        if (sms.tags.mod != "0" || sms.source.nick == nick){
             commands(sms)
         }
 
-        if (optionList.some(option => option == sms.text.toLowerCase()))
-        {
+        if (optionList.some(option => option == sms.parameters.toLowerCase())){
             if(runing){
-                //Delete sms ASAP we receive it, to hide the response from other user.
-                delete_sms(sms.id)
-                if(!turn.includes(sms.user)){
+                // Delete sms ASAP we receive it, to hide the response from other user.
+                delete_sms(sms.tags.id)
+                if(!turn.includes(sms.source.nick)){
                     let val = 0
-                    if(questions[state].correct.toLowerCase() == sms.text.toLowerCase()){
+                    if(questions[state].correct.toLowerCase() == sms.parameters.toLowerCase()){
                         val = 1
                     }
 
-                    if (points[sms.user] == null){
-                        points[sms.user] = val
+                    if (points[sms.source.nick] == null){
+                        points[sms.source.nick] = val
                     }else{
-                        points[sms.user] += val
+                        points[sms.source.nick] += val
                     }
 
-                    send(replyToUser(sms.user,"tu voto ha sido anotado."))
-                    turn.push(sms.user)
+                    send(replyToUser(sms.source.nick, "tu voto ha sido anotado."))
+                    turn.push(sms.source.nick)
                 }else{
-                    send(replyToUser(sms.user, "ya has votado esta ronda."))
+                    send(replyToUser(sms.source.nick, "ya has votado esta ronda."))
                 }
             }else{
-                send(replyToUser(sms.user, "espera a que comience la siguiente ronda."))
+                send(replyToUser(sms.source.nick, "espera a que comience la siguiente ronda."))
             }
         }
     }else{
         console.log("User list recived");
     }        
-}
-
-function parse_sms(sms) {
-    return {
-        id: sms.match(/;id=([a-f,0-9]{0,}-[a-f,0-9]{0,}-[a-f,0-9]{0,}-[a-f,0-9]{0,}-[a-f,0-9]{0,});/)[1],
-        user: sms.match(/display-name=([a-z,A-Z,_,-]{0,})/)[1],
-        color: sms.match(/color=(.{7})/)[1],
-        text: sms.split("PRIVMSG " + channel + " :")[1].replace('\r\n', ''),
-        mod: sms.match(/mod=(.{1})/)[1]
-    }
 }
 
 function paint_score() {
@@ -88,8 +69,6 @@ function start() {
     turn = []
     runing = true
     paint_ask()
-
-    // $("#block").show()
 
     $(".movil").addClass("hide")
 
@@ -154,7 +133,7 @@ function paint_ask() {
 }
 
 function commands(sms){
-    switch (sms.text) {
+    switch (sms.parameters) {
         case "!start":
             start()
             a_timer.play();
@@ -167,7 +146,7 @@ function commands(sms){
                 a_stop.play();
             }else{
                 
-                send(replyToUser(sms.user,"no hay ninguna ronda activa en este momento."))
+                send(replyToUser(sms.source.nick,"no hay ninguna ronda activa en este momento."))
             }
             break;
 
@@ -176,7 +155,7 @@ function commands(sms){
                 next()
                 a_timer.play();
             }else{
-                send(replyToUser(sms.user, "la ronda ya ha comenzado."))
+                send(replyToUser(sms.source.nick, "la ronda ya ha comenzado."))
             }
             break;
     

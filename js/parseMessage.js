@@ -4,7 +4,7 @@
  * Parses an IRC message and returns a JSON object with the message's component parts (tags, source (nick and host), command, parameters). 
  * Expects the caller to pass a single message. (Remember, the Twitch IRC server may send one or more IRC messages in a single message.)
 */
-export function parseMessage(message) {
+function parseMessage(message) {
 
     let parsedMessage = {  // Contains the component parts.
         tags: null,
@@ -75,7 +75,7 @@ export function parseMessage(message) {
 
         parsedMessage.source = parseSource(rawSourceComponent);
 
-        parsedMessage.parameters = rawParametersComponent;
+        parsedMessage.parameters = rawParametersComponent.replace('\r\n', '');
         if (rawParametersComponent && rawParametersComponent[0] === '!') {  
             // The user entered a bot command in the chat window.            
             parsedMessage.command = parseParameters(rawParametersComponent, parsedMessage.command);
