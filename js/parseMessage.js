@@ -285,3 +285,22 @@ function parseParameters(rawParametersComponent, command) {
 
     return command;
 }
+
+function get_user() {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: 'https://api.twitch.tv/helix/users?login=' + nick,
+            type: 'GET',
+            headers: {
+                "Authorization": "Bearer " + token,
+                "Client-Id": client_id
+            },
+            success: function (data) {
+                resolve(data.data[0]);
+            },
+            error: function (error) {
+                reject(error);
+            }
+        });
+    })
+}

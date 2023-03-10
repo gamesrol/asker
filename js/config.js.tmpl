@@ -1,4 +1,27 @@
-
-const pass = 'oauth:key';
+const token = 'access_token';
 const nick = 'your_nick';
 const channel = '#channel';
+const cliend_id = 'ryx33z1oht9oigg6lcgf7t6s7ks0zc';
+const final_point = 2;
+
+
+/*
+# Get token.
+
+- Go to this url.
+
+    https://id.twitch.tv/oauth2/authorize
+        ?response_type=token
+        &client_id=ryx33z1oht9oigg6lcgf7t6s7ks0zc
+        &redirect_uri=http://localhost
+        &scope=moderator%3Amanage%3Achat_messages+chat%3Aread+chat%3Aedit
+
+- On the web you confirm the permissions of the application. With the same username as the nickname you configured.
+
+- It will return you to a url similar to this one. And the browser will tell you that it does not exist.
+    http://localhost/#access_token=asdfgafl697dtcscnayhrgs8i2o&scope=moderator%3Amanage%3Achat_messages+chat%3Aread+chat%3Aedit&token_type=bearer
+
+- But what we are looking for is the access_token. ...access_token='asdfgafl697dtcscnayhrgs8i2o'&scope=moderator%... 
+  What would be the part that we have highlighted in quotes. Copy and paste it as the token.
+
+*/
