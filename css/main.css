@@ -96,6 +96,10 @@
     color: gray;
 }
 
+#score_text .unactive{
+    color: black;
+}
+
 .active{
     color: green;
 }

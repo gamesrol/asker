@@ -9,4 +9,3 @@ Twich.tv chatbot to manage questionnaires
 
 ## Usage
 - Open with the obs or the program you use. As web, setting as source the local path of index.html 
-

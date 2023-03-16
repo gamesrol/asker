@@ -29,7 +29,7 @@ function recive(sms_org) {
                     }
 
                     if (state == 1){
-                        paint_score();
+                        paint_score(true);
                     }else{
                         $("#user_" + sms.source.nick).removeClass("unactive")
                         $("#user_" + sms.source.nick).addClass("active")
@@ -59,7 +59,7 @@ function recive(sms_org) {
     }        
 }
 
-function paint_score() {
+function paint_score(first = false) {
     let text = ``
     let order = Object.entries(points).sort(([ak, av], [bk, bv]) => {
         return bv - av;
@@ -67,10 +67,16 @@ function paint_score() {
     
     order.forEach(([key, value]) => {
         let class_ = "unactive";
+        let points = value;
         if(turn.includes(key)){
             class_ = "active"
         }
-        text += `<div class="row score ${class_}" id="user_${key}"><div class="col-10">${key}</div><div class="col-2">${value}</div></div>`;
+
+        if (first){
+            points = 0;
+        }
+
+        text += `<div class="row score ${class_}" id="user_${key}"><div class="col-10">${key}</div><div class="col-2">${points}</div></div>`;
     });
     $("#score_text").html(text);
 }
@@ -89,7 +95,6 @@ function start() {
 
         $("#runing").show();
         $("#stoping").hide();
-        $(".response_container").css({color: "black"});
     }, 1000)
 }
 
@@ -111,6 +116,7 @@ function stop() {
     
         send("Finalizamos la " + state + "º ronda");
         $(".response_container").addClass("unactive");
+        $("#response_container_" + questions[state].correct).removeClass("unactive");
         $("#response_container_" + questions[state].correct).addClass("active");
         $("#score").removeClass("hide");
     }, 1000);
@@ -122,7 +128,8 @@ function next() {
     $("#block").addClass("hide");
 
     setTimeout(() => {
-        $(".response_container").css({color: "black"});
+        $(".response_container").removeClass("unactive");
+        $(".response_container").removeClass("active");
         paint_ask();
         $("#stoping").hide();
         $("#runing").show();
